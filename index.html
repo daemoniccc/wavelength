@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Wavelength</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        :root {
+            --bg: #0f0f14;
+            --card: #181820;
+            --text: #f2f2f7;
+            --muted: #a1a1b3;
+            --accent: #7c7cff;
+            --danger: #ff5f5f;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background: radial-gradient(circle at top, #1a1a2e, var(--bg));
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        .container {
+            max-width: 700px;
+            background: var(--card);
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+        }
+
+        h1 {
+            margin-top: 0;
+            font-size: 2.2rem;
+            letter-spacing: 0.5px;
+        }
+
+        h2 {
+            margin-top: 32px;
+            font-size: 1.3rem;
+        }
+
+        p {
+            line-height: 1.6;
+            color: var(--muted);
+        }
+
+        ul {
+            padding-left: 20px;
+            color: var(--muted);
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        .buttons {
+            margin-top: 36px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        a {
+            text-decoration: none;
+            text-align: center;
+            padding: 16px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        a:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .normal {
+            background: green;
+            color: white;
+        }
+
+
+        .argument {
+            background: rgb(150, 20, 150);
+            color: white;
+        }
+
+        .notnormal {
+            background: var(--danger);
+            color: white;
+        }
+
+        .warning {
+            margin-top: 16px;
+            font-size: 0.9rem;
+            color: #ffb3b3;
+            text-align: center;
+        }
+
+        @media (max-width: 600px) {
+            .buttons {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Wavelength</h1>
+
+        <p>
+            Wavelength is a guessing game where one player gives a clue, and everyone else tries
+            to place a marker on a hidden spectrum between two extremes.
+        </p>
+
+        <h2>How to Play</h2>
+        <ul>
+            <li>One player is randomly chosen as the <strong>Psychic</strong>.</li>
+            <li>The Psychic sees a category and two opposite ends of a spectrum.</li>
+            <li>The game secretly chooses a target position on that spectrum.</li>
+            <li>The Psychic gives <strong>one hint</strong> that fits the category.</li>
+            <li>Everyone else places their arrow where they think the target is.</li>
+            <li>The closer you are, the better you did.</li>
+        </ul>
+
+        <h2>Choose a Mode</h2>
+        <p>
+            Normal mode is safe, casual, and suitable for pretty much anyone.
+            Not Normal mode was made by Grok AI have fun!
+        </p>
+
+        <div class="buttons">
+            <a href="normal.html" class="normal">Normal Mode</a>
+            <a href="weirdgrokthing.html" class="notnormal">Not Normal Mode</a>
+            <!-- <a href="cooked.html" class="argument">Exhibit A</a> -->
+        </div>
+
+        <div class="warning">
+            Not Normal is very lewd with some politcal incorrectness. 
+        </div>
+    </div>
+</body>
+</html>

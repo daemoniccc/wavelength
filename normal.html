@@ -1,0 +1,1570 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Wavelength (normal)</title>
+        <style>
+            :root {
+                --bg: #0f1115;
+                --panel: rgba(255, 255, 255, 0.06);
+                --panel-2: rgba(255, 255, 255, 0.08);
+                --border: rgba(255, 255, 255, 0.14);
+                --text: rgba(255, 255, 255, 0.92);
+                --muted: rgba(255, 255, 255, 0.62);
+                --shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
+                --radius: 22px;
+            }
+
+            * {
+                box-sizing: border-box;
+            }
+
+            body {
+                margin: 0;
+                min-height: 100vh;
+                display: grid;
+                place-items: center;
+                background:
+                    radial-gradient(
+                        1200px 800px at 20% 15%,
+                        rgba(120, 80, 255, 0.18),
+                        transparent 60%
+                    ),
+                    radial-gradient(
+                        900px 700px at 80% 80%,
+                        rgba(0, 210, 255, 0.14),
+                        transparent 60%
+                    ),
+                    var(--bg);
+                font-family:
+                    ui-sans-serif,
+                    system-ui,
+                    -apple-system,
+                    Segoe UI,
+                    Roboto,
+                    Arial,
+                    Helvetica,
+                    sans-serif;
+                color: var(--text);
+                padding: 5vw;
+            }
+
+            .card {
+                width: 90vw;
+                background: linear-gradient(
+                    180deg,
+                    rgba(255, 255, 255, 0.08),
+                    rgba(255, 255, 255, 0.04)
+                );
+                border: 1px solid var(--border);
+                border-radius: var(--radius);
+                box-shadow: var(--shadow);
+                overflow: hidden;
+            }
+
+            .header {
+                padding: 22px 22px 14px 22px;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            }
+
+            .title {
+                margin: 0;
+                font-size: 22px;
+                letter-spacing: 0.3px;
+            }
+
+            .subtitle {
+                margin: 6px 0 0 0;
+                color: var(--muted);
+                font-size: 14px;
+                line-height: 1.35;
+            }
+
+            .content {
+                padding: 18px 22px 0 22px;
+            }
+
+            .row {
+                display: flex;
+                gap: 10px;
+                align-items: center;
+            }
+
+            .input {
+                flex: 1;
+                padding: 12px 14px;
+                border-radius: 14px;
+                border: 1px solid rgba(255, 255, 255, 0.14);
+                background: rgba(0, 0, 0, 0.25);
+                color: var(--text);
+                outline: none;
+                transition:
+                    border-color 0.2s,
+                    background 0.2s;
+            }
+
+            .input:focus {
+                border-color: rgba(120, 80, 255, 0.55);
+                background: rgba(0, 0, 0, 0.32);
+            }
+
+            .btn {
+                padding: 12px 14px;
+                border-radius: 14px;
+                border: 1px solid rgba(255, 255, 255, 0.14);
+                background: rgba(255, 255, 255, 0.06);
+                color: var(--text);
+                cursor: pointer;
+                transition:
+                    transform 0.15s,
+                    background 0.2s,
+                    border-color 0.2s,
+                    opacity 0.2s;
+                user-select: none;
+                white-space: nowrap;
+            }
+
+            .btn:hover {
+                background: rgba(255, 255, 255, 0.1);
+            }
+            .btn:active {
+                transform: translateY(1px);
+            }
+            .btn:disabled {
+                opacity: 0.45;
+                cursor: not-allowed;
+            }
+
+            .btn.primary {
+                background: linear-gradient(
+                    135deg,
+                    rgba(120, 80, 255, 0.65),
+                    rgba(0, 210, 255, 0.35)
+                );
+                border-color: rgba(255, 255, 255, 0.18);
+            }
+
+            .btn.primary:hover {
+                background: linear-gradient(
+                    135deg,
+                    rgba(120, 80, 255, 0.75),
+                    rgba(0, 210, 255, 0.42)
+                );
+            }
+
+            .hint {
+                margin: 10px 2px 14px 2px;
+                color: var(--muted);
+                font-size: 12.5px;
+            }
+
+            .listWrap {
+                margin-top: 10px;
+                padding: 12px;
+                background: rgba(0, 0, 0, 0.18);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                border-radius: 18px;
+            }
+
+            ul {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+                display: grid;
+                gap: 10px;
+                max-height: min(44vh, 360px);
+                overflow: auto;
+            }
+
+            li {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 12px;
+                padding: 12px 12px;
+                border-radius: 14px;
+                background: rgba(255, 255, 255, 0.06);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            .name {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                font-size: 14.5px;
+            }
+
+            .pill {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+            }
+
+            .badge {
+                font-size: 12px;
+                padding: 4px 8px;
+                border-radius: 999px;
+                background: rgba(255, 255, 255, 0.08);
+                border: 1px solid rgba(255, 255, 255, 0.12);
+                color: var(--muted);
+                text-align: center;
+            }
+
+            .remove {
+                padding: 8px 10px;
+                border-radius: 12px;
+                border: 1px solid rgba(255, 255, 255, 0.12);
+                background: rgba(0, 0, 0, 0.18);
+                color: var(--text);
+            }
+
+            .remove:hover {
+                border-color: rgba(255, 120, 120, 0.45);
+                background: rgba(255, 80, 80, 0.12);
+            }
+
+            .footer {
+                padding: 16px 22px 22px 22px;
+                display: flex;
+                gap: 10px;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .status {
+                color: var(--muted);
+                font-size: 12.5px;
+            }
+
+            /* Spectrum UI */
+            .spectrumBase {
+                width: 320px;
+                height: 170px;
+                border-top-left-radius: 160px;
+                border-top-right-radius: 160px;
+                border-bottom-left-radius: 10px;
+                border-bottom-right-radius: 10px;
+                background-color: rgba(0, 0, 0, 0.4);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                overflow: hidden;
+                position: relative;
+            }
+
+            .spectrumBG {
+                width: 100%;
+                height: 200%;
+                transform: rotate(-18.75deg);
+                background: conic-gradient(
+                    /* modern teal -> amber -> red -> amber -> teal */ #2dd4bf
+                        0deg,
+                    #2dd4bf 8deg,
+                    #fbbf24 8deg,
+                    #fbbf24 16deg,
+                    #ef4444 16deg,
+                    #ef4444 24deg,
+                    #fbbf24 24deg,
+                    #fbbf24 32deg,
+                    #2dd4bf 32deg,
+                    #2dd4bf 40deg,
+                    rgba(0, 0, 0, 0) 40deg
+                );
+            }
+
+            .spectrumArrowBase {
+                position: absolute;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 40px;
+                height: 40px;
+                border-radius: 999px;
+                left: 50%;
+                bottom: -20px;
+                transform: translateX(-50%);
+                background-color: rgba(0, 0, 0, 1);
+                border: 1px solid rgba(255, 255, 255, 0.12);
+                z-index: 2;
+            }
+
+            #arrowRoot {
+                transform-origin: center center;
+                transform: rotate(0deg);
+                width: 20px;
+                height: 20px;
+                border-radius: 10px;
+                background-color: red;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            #needle {
+                width: 4px;
+                height: 320px;
+                border-radius: 999px;
+                background-color: red;
+            }
+
+            /* Screen switching */
+            .screen {
+                display: none;
+            }
+            .screen.active {
+                display: block;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="card">
+            <!-- Screen: Players -->
+            <section id="screenPlayers" class="screen active">
+                <div class="header">
+                    <h1 class="title">Players</h1>
+                    <p class="subtitle">
+                        Add 2 or more players, then start the round.
+                    </p>
+                </div>
+
+                <div class="content">
+                    <div class="row">
+                        <input
+                            id="playerInput"
+                            class="input"
+                            type="text"
+                            placeholder="Enter player name…"
+                            maxlength="24"
+                        />
+                        <button id="addPlayerBtn" class="btn">Add</button>
+                    </div>
+                    <div id="playersHint" class="hint">
+                        Tip: press Enter to add.
+                    </div>
+
+                    <div class="listWrap">
+                        <ul id="playersList" aria-label="Player list"></ul>
+                    </div>
+                </div>
+
+                <div class="footer">
+                    <div class="status">
+                        <span id="countLabel">0</span> players
+                        <span class="badge" id="minLabel">Need 2</span>
+                    </div>
+
+                    <div class="row">
+                        <button id="clearPlayersBtn" class="btn">Clear</button>
+                        <button id="startRoundBtn" class="btn primary" disabled>
+                            Start
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Screen: Psychic announce -->
+            <section id="screenPsychicA" class="screen">
+                <div class="header">
+                    <h1 class="title" id="roundTitle">Round 1</h1>
+                </div>
+
+                <div class="content" style="padding-bottom: 22px">
+                    <div class="listWrap">
+                        <div
+                            style="
+                                color: var(--muted);
+                                font-size: 14px;
+                                line-height: 1.5;
+                            "
+                            id="psychicText"
+                        >
+                            [player] is the psychic. Pass the device to them.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="footer">
+                    <button id="backToPlayersBtn" class="btn">Back</button>
+                    <button id="toPsychicBBtn" class="btn primary">
+                        Continue
+                    </button>
+                </div>
+            </section>
+
+            <!-- Screen: Psychic hint + spectrum -->
+            <section id="screenPsychicB" class="screen">
+                <div class="header">
+                    <h1 class="title" id="categoryText">
+                        Category: [category]
+                    </h1>
+                    <p class="subtitle">
+                        Write a hint for the spectrum shown below.
+                    </p>
+                </div>
+
+                <div class="content">
+                    <div class="row">
+                        <input
+                            id="hintInput"
+                            class="input"
+                            type="text"
+                            placeholder="Enter hint..."
+                            maxlength="50"
+                        />
+                    </div>
+
+                    <div
+                        class="listWrap"
+                        style="
+                            display: flex;
+                            flex-direction: column;
+                            align-items: center;
+                            gap: 10px;
+                        "
+                    >
+                        <div class="spectrumBase">
+                            <div
+                                class="spectrumBG"
+                                id="spectrumBGquestion"
+                            ></div>
+                            <div class="spectrumArrowBase"></div>
+                        </div>
+
+                        <div
+                            style="
+                                display: flex;
+                                justify-content: space-between;
+                                gap: 100px;
+                                margin-top: 0px;
+                            "
+                        >
+                            <div class="badge" id="conceptLeft">Left</div>
+                            <div class="badge" id="conceptRight">Right</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="footer">
+                    <button id="rerollBtn" class="btn">Reroll</button>
+                    <button id="lockHintBtn" class="btn primary">Submit</button>
+                </div>
+            </section>
+
+            <section id="screenGame" class="screen">
+                <div class="header">
+                    <h1 class="title" id="categoryText2">
+                        Category: [category]
+                    </h1>
+                    <p class="subtitle" id="playerTurn">
+                        It is [player]'s turn.
+                    </p>
+                </div>
+
+                <div class="content">
+                    <div class="listWrap">
+                        <div
+                            style="
+                                color: var(--muted);
+                                font-size: 14px;
+                                line-height: 1.5;
+                            "
+                            id="psychicHint"
+                        >
+                            Hint : [hint]
+                        </div>
+                    </div>
+
+                    <div
+                        class="listWrap"
+                        style="
+                            display: flex;
+                            flex-direction: column;
+                            align-items: center;
+                            gap: 10px;
+                        "
+                    >
+                        <div class="spectrumBase" id="spectrumTouchSensor">
+                            <div class="spectrumArrowBase">
+                                <div id="arrowRoot">
+                                    <div id="needle"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div
+                            style="
+                                display: flex;
+                                justify-content: space-between;
+                                gap: 100px;
+                                margin-top: 0px;
+                            "
+                        >
+                            <div class="badge" id="conceptLeftAgain">Left</div>
+                            <div class="badge" id="conceptRightAgain">
+                                Right
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="footer" style="justify-content: right">
+                    <button id="subBtn" class="btn primary">Submit</button>
+                </div>
+            </section>
+
+            <!-- Screen: Psychic hint + spectrum -->
+            <section id="screenAnswer" class="screen">
+                <div class="header">
+                    <h1 class="title">Answer</h1>
+                    <p id="categoryText3" class="subtitle">
+                        Category: [category]
+                    </p>
+                </div>
+
+                <div class="content">
+                    <div class="listWrap">
+                        <div
+                            style="
+                                color: var(--muted);
+                                font-size: 14px;
+                                line-height: 1.5;
+                            "
+                            id="psychicHint2"
+                        >
+                            Hint : [hint]
+                        </div>
+                    </div>
+
+                    <div
+                        class="listWrap"
+                        style="
+                            display: flex;
+                            flex-direction: column;
+                            align-items: center;
+                            gap: 10px;
+                        "
+                    >
+                        <div class="spectrumBase">
+                            <div class="spectrumBG" id="spectrumBGAnswer"></div>
+                            <div class="spectrumArrowBase"></div>
+                        </div>
+
+                        <div
+                            style="
+                                display: flex;
+                                justify-content: space-between;
+                                gap: 100px;
+                                margin-top: 0px;
+                            "
+                        >
+                            <div class="badge" id="conceptLeft3">Left</div>
+                            <div class="badge" id="conceptRight3">Right</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="footer" style="justify-content: right">
+                    <button id="toLbBtn" class="btn primary">Next</button>
+                </div>
+            </section>
+
+            <section id="screenLeaderboard" class="screen">
+                <div class="header">
+                    <h1 class="title">Leaderboard</h1>
+                    <p class="subtitle">Total points</p>
+                </div>
+
+                <div class="content">
+                    <div class="listWrap">
+                        <ul id="leaderboardList" aria-label="Leaderboard"></ul>
+                    </div>
+                </div>
+
+                <div class="footer" style="justify-content: right">
+                    <button id="nextRoundBtn" class="btn primary">
+                        Next round
+                    </button>
+                </div>
+            </section>
+        </div>
+
+        <script>
+            "use strict";
+
+            /* ============================== Data: Prompts ============================== */
+            const PROMPTS = [
+                {
+                    category: "Addiction",
+                    left: "Highly addictive",
+                    right: "Mildly addictive",
+                },
+                { category: "Temperature", left: "Cold", right: "Hot" },
+                { category: "Normality", left: "Weird", right: "Normal" },
+                {
+                    category: "Appearance",
+                    left: "Colorful",
+                    right: "Colorless",
+                },
+                {
+                    category: "Calories",
+                    left: "High calorie",
+                    right: "Low calorie",
+                },
+                { category: "Feeling", left: "Feels good", right: "Feels bad" },
+                {
+                    category: "Importance",
+                    left: "Essential",
+                    right: "Inessential",
+                },
+                { category: "Cost", left: "Expensive", right: "Cheap" },
+                {
+                    category: "Weapons",
+                    left: "Overrated weapon",
+                    right: "Underrated weapon",
+                },
+                { category: "Rarity", left: "Common", right: "Rare" },
+                { category: "Attractiveness", left: "Sexy", right: "Unsexy" },
+                {
+                    category: "Subjects",
+                    left: "Hard subject – Physics",
+                    right: "Easy subject",
+                },
+                { category: "Fame", left: "Famous", right: "Unknown" },
+                {
+                    category: "Usability",
+                    left: "Easy to use",
+                    right: "Difficult to use",
+                },
+                { category: "Energy", left: "Wired", right: "Tired" },
+                { category: "Cleanliness", left: "Clean", right: "Dirty" },
+                {
+                    category: "Success",
+                    left: "Requires skill",
+                    right: "Requires luck",
+                },
+                { category: "Taste", left: "Flavorful", right: "Flavorless" },
+                {
+                    category: "Interest",
+                    left: "Fascinating topic",
+                    right: "Boring topic",
+                },
+                { category: "Acting", left: "Good actor", right: "Bad actor" },
+                { category: "Style", left: "Hipster", right: "Basic" },
+                { category: "Jobs", left: "Safe job", right: "Dangerous job" },
+                { category: "Genre", left: "Sci-Fi", right: "Fantasy" },
+                { category: "Dress code", left: "Formal", right: "Casual" },
+                { category: "Pay", left: "Overpaid", right: "Underpaid" },
+                { category: "Moisture", left: "Wet", right: "Dry" },
+                {
+                    category: "Skills",
+                    left: "Overrated skill",
+                    right: "Underrated skill",
+                },
+                { category: "Rules", left: "Encouraged", right: "Forbidden" },
+                {
+                    category: "Music mood",
+                    left: "Happy song – Walking on Sunshine / Uptown Girl",
+                    right: "Sad song – Eric Clapton / Stairway to Heaven",
+                },
+                { category: "Durability", left: "Durable", right: "Fragile" },
+                { category: "Personality", left: "Dork", right: "Geek" },
+                { category: "Morality", left: "Evil", right: "Good" },
+                {
+                    category: "Time",
+                    left: "Best day of the year",
+                    right: "Worst day of the year",
+                },
+                { category: "Habits", left: "Good habit", right: "Bad habit" },
+                { category: "Pets", left: "Dog person", right: "Cat person" },
+                {
+                    category: "Enjoyment",
+                    left: "Openly love",
+                    right: "Guilty pleasure",
+                },
+                { category: "Talent", left: "Talented", right: "Untalented" },
+                { category: "Light", left: "Light", right: "Dark" },
+                {
+                    category: "Actors",
+                    left: "Overrated actor – Kristen Stewart",
+                    right: "Underrated actor – Lena Headey / Sean Bean",
+                },
+                {
+                    category: "Availability",
+                    left: "Easy to find",
+                    right: "Hard to find",
+                },
+                {
+                    category: "Memory",
+                    left: "Easy to remember",
+                    right: "Hard to remember",
+                },
+                { category: "Culture", left: "Highbrow", right: "Lowbrow" },
+                { category: "Health", left: "Healthy", right: "Unhealthy" },
+                { category: "Character", left: "Good man", right: "Bad man" },
+                {
+                    category: "History",
+                    left: "Historically irrelevant",
+                    right: "Historically important",
+                },
+                { category: "Hair", left: "Hairy", right: "Hairless" },
+                {
+                    category: "Flexibility",
+                    left: "Flexible",
+                    right: "Inflexible",
+                },
+                {
+                    category: "Animals",
+                    left: "Exotic pet",
+                    right: "Normal pet",
+                },
+                {
+                    category: "Social energy",
+                    left: "Extrovert",
+                    right: "Introvert",
+                },
+                {
+                    category: "Adaptations",
+                    left: "Movie was better",
+                    right: "Book was better",
+                },
+                { category: "Movies", left: "Good movie", right: "Bad movie" },
+                { category: "Beauty", left: "Beautiful", right: "Ugly" },
+                {
+                    category: "Timing",
+                    left: "Happens suddenly",
+                    right: "Happens slowly",
+                },
+                { category: "Work", left: "Career", right: "Job" },
+                { category: "Popularity", left: "Hated", right: "Loved" },
+                {
+                    category: "Star Wars",
+                    left: "Dark Side of the Force",
+                    right: "Light Side of the Force",
+                },
+                {
+                    category: "Food",
+                    left: "Good pizza topping",
+                    right: "Bad pizza topping",
+                },
+                { category: "Worlds", left: "Utopia", right: "Dystopia" },
+                {
+                    category: "Maturity",
+                    left: "Immature person",
+                    right: "Mature person",
+                },
+                {
+                    category: "Ownership",
+                    left: "Overrated thing to own",
+                    right: "Underrated thing to own",
+                },
+                {
+                    category: "Kindness",
+                    left: "Nice person",
+                    right: "Mean person",
+                },
+                {
+                    category: "Movies",
+                    left: "Adventure movie",
+                    right: "Action movie",
+                },
+                {
+                    category: "Activity",
+                    left: "Physical activity",
+                    right: "Mental activity",
+                },
+                {
+                    category: "Debate",
+                    left: "Controversial topic",
+                    right: "Uncontroversial topic",
+                },
+                { category: "Desire", left: "Want", right: "Need" },
+                { category: "Pet food", left: "Wet food", right: "Dry food" },
+                {
+                    category: "Objects",
+                    left: "Weird thing to own",
+                    right: "Normal thing to own",
+                },
+                { category: "Shapes", left: "Curvy", right: "Straight" },
+                {
+                    category: "People",
+                    left: "Good person",
+                    right: "Bad person",
+                },
+                { category: "Decades", left: "90s", right: "80s" },
+                {
+                    category: "Ethics",
+                    left: "Unethical to eat",
+                    right: "Ethical to eat",
+                },
+                { category: "Media", left: "Film", right: "Movie" },
+                { category: "Rules", left: "Mandatory", right: "Optional" },
+                {
+                    category: "Alphabet",
+                    left: "Overrated letter",
+                    right: "Underrated letter",
+                },
+                { category: "Scale", left: "Extraordinary", right: "Ordinary" },
+                {
+                    category: "Pronunciation",
+                    left: "Easy to pronounce",
+                    right: "Hard to pronounce",
+                },
+                {
+                    category: "Quality",
+                    left: "High quality",
+                    right: "Low quality",
+                },
+                {
+                    category: "Animals",
+                    left: "Sexy animal",
+                    right: "Unsexy animal",
+                },
+                { category: "Style", left: "Fancy", right: "Plain" },
+                {
+                    category: "Reputation",
+                    left: "Has a good reputation",
+                    right: "Has a bad reputation",
+                },
+                {
+                    category: "Craftsmanship",
+                    left: "Well made",
+                    right: "Poorly made",
+                },
+                {
+                    category: "Food debate",
+                    left: "A sandwich",
+                    right: "Not a sandwich",
+                },
+                { category: "Noise", left: "Loud place", right: "Quiet place" },
+                { category: "Genres", left: "Drama", right: "Comedy" },
+                { category: "Safety", left: "Safe", right: "Dangerous" },
+                {
+                    category: "Culture",
+                    left: "Culturally insignificant",
+                    right: "Culturally significant",
+                },
+                {
+                    category: "Value",
+                    left: "Irreplaceable",
+                    right: "Replaceable",
+                },
+                {
+                    category: "Influence",
+                    left: "Bad influence",
+                    right: "Role model",
+                },
+                {
+                    category: "Education",
+                    left: "Useful major",
+                    right: "Useless major",
+                },
+                { category: "Conflict", left: "Warlike", right: "Peaceful" },
+                {
+                    category: "Movies",
+                    left: "Overrated movie",
+                    right: "Underrated movie",
+                },
+                { category: "Texture", left: "Smooth", right: "Rough" },
+                {
+                    category: "Health impact",
+                    left: "Good for you",
+                    right: "Bad for you",
+                },
+                { category: "Shape", left: "Pointy", right: "Round" },
+                {
+                    category: "Belief",
+                    left: "Proof that God doesn’t exist",
+                    right: "Proof that God exists",
+                },
+                {
+                    category: "Emotion",
+                    left: "Happy movie",
+                    right: "Sad movie",
+                },
+                {
+                    category: "Time use",
+                    left: "Good use of time",
+                    right: "Waste of time",
+                },
+                {
+                    category: "Animals",
+                    left: "Nice animal",
+                    right: "Scary animal",
+                },
+                {
+                    category: "Longevity",
+                    left: "Long lived",
+                    right: "Short lived",
+                },
+                {
+                    category: "Trends",
+                    left: "Everybody does it",
+                    right: "Nobody does it",
+                },
+                { category: "Smell", left: "Smells good", right: "Smells bad" },
+                {
+                    category: "Franchises",
+                    left: "Star Trek",
+                    right: "Star Wars",
+                },
+                { category: "Eating", left: "Meal", right: "Snack" },
+                {
+                    category: "Companies",
+                    left: "Most evil company",
+                    right: "Least evil company",
+                },
+                { category: "Texture", left: "Hard", right: "Soft" },
+                {
+                    category: "Food",
+                    left: "Haute cuisine",
+                    right: "Sustenance",
+                },
+                { category: "Shape", left: "Round", right: "Square" },
+                {
+                    category: "Temperature preference",
+                    left: "Better cold",
+                    right: "Better hot",
+                },
+                {
+                    category: "Production",
+                    left: "Mass produced",
+                    right: "Artisanal",
+                },
+                {
+                    category: "Superpowers",
+                    left: "Good superpower",
+                    right: "Bad superpower",
+                },
+                {
+                    category: "Effectiveness",
+                    left: "Effective",
+                    right: "Ineffective",
+                },
+                {
+                    category: "Realism",
+                    left: "Believable",
+                    right: "Unbelievable",
+                },
+                { category: "Taste", left: "Classy", right: "Trashy" },
+                { category: "Duration", left: "Permanent", right: "Temporary" },
+                {
+                    category: "Appearance",
+                    left: "Doesn't look like a person",
+                    right: "Looks like a person",
+                },
+                { category: "Taste", left: "Tastes good", right: "Tastes bad" },
+                { category: "Activities", left: "Game", right: "Sport" },
+                { category: "Coolness", left: "Cool", right: "Uncool" },
+                {
+                    category: "Reputation",
+                    left: "Overrated",
+                    right: "Underrated",
+                },
+                {
+                    category: "Texting",
+                    left: "Overthinking",
+                    right: "Could Not Care Less",
+                },
+                {
+                    category: "Reply Time",
+                    left: "Instant",
+                    right: "Strategic Delay",
+                },
+                { category: "Jealousy", left: "Reasonable", right: "Unhinged" },
+                {
+                    category: "Apologies",
+                    left: "Genuine",
+                    right: "Damage Control",
+                },
+                {
+                    category: "Ghosting",
+                    left: "Unacceptable",
+                    right: "Fair Enough",
+                },
+                {
+                    category: "Rumours",
+                    left: "Harmless",
+                    right: "Life Ruining",
+                },
+                { category: "Confidence", left: "Earned", right: "Delusional" },
+                { category: "Attention", left: "Chill", right: "Addictive" },
+                {
+                    category: "Regrets",
+                    left: "None",
+                    right: "Weekly Occurrence",
+                },
+                { category: "Drama", left: "Avoidable", right: "Inevitable" },
+                // SOCIAL / CHEEKY
+                {
+                    category: "Attraction",
+                    left: "Red Flag",
+                    right: "Green Flag",
+                },
+                { category: "Flirting", left: "Painful", right: "Dangerous" },
+                {
+                    category: "Confidence",
+                    left: "Insecure",
+                    right: "Unjustified",
+                },
+                {
+                    category: "Parties",
+                    left: "Awkward",
+                    right: "Unforgettable",
+                },
+                { category: "Secrets", left: "Overshared", right: "Buried" },
+
+                // HOUSE PARTY ENERGY
+                { category: "House Party", left: "Dead", right: "Iconic" },
+                {
+                    category: "Music Choice",
+                    left: "Killed the Vibe",
+                    right: "Saved the Night",
+                },
+                {
+                    category: "Volume",
+                    left: "Background",
+                    right: "Neighbour Alert",
+                },
+                {
+                    category: "People Count",
+                    left: "Too Empty",
+                    right: "Fire Hazard",
+                },
+                {
+                    category: "Ending",
+                    left: "Quiet Fade",
+                    right: "Police Mentioned",
+                },
+
+                // STYLE
+                { category: "Outfit", left: "Questionable", right: "Elite" },
+                { category: "Style", left: "Try Hard", right: "Effortless" },
+                {
+                    category: "Footwear",
+                    left: "Wrong Choice",
+                    right: "Perfect Pair",
+                },
+                { category: "Trim", left: "Needs Fixing", right: "Fresh" },
+                { category: "Drip Level", left: "Dry", right: "Soaked" },
+
+                // ABSTRACT WAVELENGTH BAIT
+                { category: "Coolness", left: "Forced", right: "Natural" },
+                { category: "Fame", left: "Deserved", right: "Pure Luck" },
+                { category: "Rules", left: "Important", right: "Optional" },
+                {
+                    category: "Memories",
+                    left: "Forgettable",
+                    right: "Core Memory",
+                },
+                { category: "Risk", left: "Not Worth It", right: "Send It" },
+            ];
+
+            /* ============================== Constants ============================== */
+            const MIN_PLAYERS = 2;
+
+            // Arrow drag clamp
+            const MIN_DEG = -80;
+            const MAX_DEG = 80;
+
+            // Scoring thresholds (degrees)
+            const SCORE_BANDS = [
+                { maxDiff: 4, points: 5 },
+                { maxDiff: 12, points: 2 },
+                { maxDiff: 20, points: 1 },
+            ];
+
+            /* ============================== State ============================== */
+            const state = {
+                round: 0,
+
+                players: [],
+                scores: Object.create(null), // { name: points }
+
+                psychic: null,
+                prompt: null, // {category,left,right}
+                hint: "",
+
+                // Hidden true rotation for the dial (psychic screen)
+                answerDeg: 0,
+
+                // Guessing flow (game screen)
+                guessers: [],
+                turnIndex: 0,
+
+                // Current arrow rotation chosen by the active guesser
+                guessDeg: 0,
+            };
+
+            /* ============================== DOM helpers ============================== */
+            const $ = (id) => document.getElementById(id);
+
+            const dom = {
+                // Screens
+                screens: {
+                    players: $("screenPlayers"),
+                    psychicA: $("screenPsychicA"),
+                    psychicB: $("screenPsychicB"),
+                    game: $("screenGame"),
+                    answer: $("screenAnswer"),
+                    leaderboard: $("screenLeaderboard"),
+                },
+
+                // Players screen
+                playerInput: $("playerInput"),
+                addPlayerBtn: $("addPlayerBtn"),
+                clearPlayersBtn: $("clearPlayersBtn"),
+                startRoundBtn: $("startRoundBtn"),
+                playersList: $("playersList"),
+                countLabel: $("countLabel"),
+                minLabel: $("minLabel"),
+                playersHint: $("playersHint"),
+
+                // PsychicA screen
+                roundTitle: $("roundTitle"),
+                psychicText: $("psychicText"),
+                backToPlayersBtn: $("backToPlayersBtn"),
+                toPsychicBBtn: $("toPsychicBBtn"),
+
+                // PsychicB screen
+                categoryText: $("categoryText"),
+                conceptLeft: $("conceptLeft"),
+                conceptRight: $("conceptRight"),
+                hintInput: $("hintInput"),
+                lockHintBtn: $("lockHintBtn"),
+                spectrumBGquestion: $("spectrumBGquestion"),
+
+                // Game screen (must exist in your HTML)
+                categoryText2: $("categoryText2"),
+                psychicHint: $("psychicHint"),
+                conceptLeftAgain: $("conceptLeftAgain"),
+                conceptRightAgain: $("conceptRightAgain"),
+                playerTurn: $("playerTurn"),
+                subBtn: $("subBtn"),
+
+                // Arrow drag
+                sensor: $("spectrumTouchSensor"),
+                arrowRoot: $("arrowRoot"),
+
+                // Answer screen
+                toLbBtn: $("toLbBtn"),
+
+                leaderboard: $("screenLeaderboard"),
+                leaderboardList: $("leaderboardList"),
+                nextRoundBtn: $("nextRoundBtn"),
+
+                rerollBtn: $("rerollBtn"),
+            };
+
+            /* ============================== Screen switching ============================== */
+            function setScreen(name) {
+                for (const key of Object.keys(dom.screens)) {
+                    const el = dom.screens[key];
+                    if (!el) continue;
+                    el.classList.toggle("active", key === name);
+                }
+            }
+
+            /* ============================== Utilities ============================== */
+            function normalizeText(s) {
+                return String(s || "")
+                    .trim()
+                    .replace(/\s+/g, " ");
+            }
+
+            function randInt(maxExclusive) {
+                return Math.floor(Math.random() * maxExclusive);
+            }
+
+            function pickRandom(arr) {
+                return arr[randInt(arr.length)];
+            }
+
+            function pickPrompt() {
+                if (PROMPTS.length === 0) return null;
+                if (!state.prompt || PROMPTS.length === 1)
+                    return pickRandom(PROMPTS);
+
+                let p = pickRandom(PROMPTS);
+                let tries = 0;
+                while (p === state.prompt && tries < 12) {
+                    p = pickRandom(PROMPTS);
+                    tries++;
+                }
+                return p;
+            }
+
+            function clamp(v, lo, hi) {
+                return Math.max(lo, Math.min(hi, v));
+            }
+
+            function ensureScore(name) {
+                if (state.scores[name] == null) state.scores[name] = 0;
+            }
+
+            function pointsFromDiff(diffDeg) {
+                for (const band of SCORE_BANDS) {
+                    if (diffDeg < band.maxDiff) return band.points; // strict < as requested
+                }
+                return 0;
+            }
+
+            /* ============================== Players UI ============================== */
+            function updatePlayersUI() {
+                dom.countLabel.textContent = String(state.players.length);
+
+                const remaining = Math.max(
+                    0,
+                    MIN_PLAYERS - state.players.length,
+                );
+                dom.minLabel.textContent =
+                    remaining === 0 ? "Ready" : `Need ${remaining}`;
+                dom.startRoundBtn.disabled = state.players.length < MIN_PLAYERS;
+
+                dom.playersHint.textContent =
+                    state.players.length === 0
+                        ? "Tip: press Enter to add."
+                        : "Click ✕ to remove a player.";
+            }
+
+            function renderPlayersList() {
+                dom.playersList.innerHTML = "";
+
+                state.players.forEach((name, idx) => {
+                    const li = document.createElement("li");
+
+                    const left = document.createElement("div");
+                    left.className = "pill";
+
+                    const label = document.createElement("span");
+                    label.className = "badge";
+                    label.textContent = `#${idx + 1}`;
+
+                    const span = document.createElement("span");
+                    span.className = "name";
+                    span.textContent = name;
+
+                    left.appendChild(label);
+                    left.appendChild(span);
+
+                    const removeBtn = document.createElement("button");
+                    removeBtn.className = "btn remove";
+                    removeBtn.type = "button";
+                    removeBtn.textContent = "✕";
+                    removeBtn.title = "Remove player";
+                    removeBtn.addEventListener("click", () => {
+                        state.players.splice(idx, 1);
+                        renderPlayersList();
+                        updatePlayersUI();
+                    });
+
+                    li.appendChild(left);
+                    li.appendChild(removeBtn);
+                    dom.playersList.appendChild(li);
+                });
+            }
+
+            function addPlayerFromInput() {
+                const value = normalizeText(dom.playerInput.value);
+                if (!value) return;
+
+                if (value.length < 2) {
+                    dom.playerInput.value = "";
+                    dom.playerInput.focus();
+                    return;
+                }
+
+                const exists = state.players.some(
+                    (p) => p.toLowerCase() === value.toLowerCase(),
+                );
+                if (exists) {
+                    dom.playerInput.select();
+                    return;
+                }
+
+                state.players.push(value);
+                dom.playerInput.value = "";
+                renderPlayersList();
+                updatePlayersUI();
+                dom.playerInput.focus();
+            }
+
+            function clearPlayers() {
+                state.players.length = 0;
+                renderPlayersList();
+                updatePlayersUI();
+                dom.playerInput.value = "";
+                dom.playerInput.focus();
+            }
+
+            /* ============================== Round flow ============================== */
+            function startRound() {
+                if (state.players.length < MIN_PLAYERS) return;
+
+                state.round += 1;
+                state.answerDeg =
+                    Math.floor((Math.random() * 160 - 100) / 2) * 2;
+
+                state.psychic = pickRandom(state.players);
+                state.prompt = pickPrompt();
+                state.hint = "";
+
+                // Prepare guessers (everyone except psychic)
+                state.guessers = state.players.filter(
+                    (p) => p !== state.psychic,
+                );
+                state.turnIndex = 0;
+
+                // Reset arrow guess
+                setGuessDeg(0);
+
+                // Psychic A screen
+                dom.roundTitle.textContent = `Round ${state.round}`;
+                dom.psychicText.textContent = `${state.psychic} is the psychic. Pass the device to them.`;
+
+                setScreen("psychicA");
+            }
+
+            function toPsychicB() {
+                if (!state.prompt) return;
+
+                dom.categoryText.textContent = `Category: ${state.prompt.category}`;
+                dom.conceptLeft.textContent = state.prompt.left;
+                dom.conceptRight.textContent = state.prompt.right;
+
+                if (dom.spectrumBGquestion) {
+                    dom.spectrumBGquestion.style.transform = `rotate(${state.answerDeg}deg)`;
+                }
+
+                dom.hintInput.value = "";
+                setScreen("psychicB");
+                dom.hintInput.focus();
+            }
+
+            function lockHintAndGoToGame() {
+                const hint = normalizeText(dom.hintInput.value);
+                if (!hint) {
+                    dom.hintInput.focus();
+                    return;
+                }
+                state.hint = hint;
+
+                // Populate game screen
+                if (dom.categoryText2)
+                    dom.categoryText2.textContent = `Category: ${state.prompt.category}`;
+                if (dom.psychicHint)
+                    dom.psychicHint.textContent = `Hint: ${state.hint}`;
+                if (dom.conceptLeftAgain)
+                    dom.conceptLeftAgain.textContent = state.prompt.left;
+                if (dom.conceptRightAgain)
+                    dom.conceptRightAgain.textContent = state.prompt.right;
+
+                updateTurnLabel();
+                setScreen("game");
+            }
+
+            function updateTurnLabel() {
+                const guesser = state.guessers[state.turnIndex];
+                if (dom.playerTurn)
+                    dom.playerTurn.textContent = guesser
+                        ? `It is ${guesser}'s turn.`
+                        : "";
+            }
+
+            function submitGuess() {
+                const guesser = state.guessers[state.turnIndex];
+                if (!guesser) return;
+
+                const diff = Math.abs(state.guessDeg - 20 - state.answerDeg);
+                const pts = pointsFromDiff(diff);
+
+                ensureScore(guesser);
+                ensureScore(state.psychic);
+
+                state.scores[guesser] += pts;
+                state.scores[state.psychic] += pts;
+
+                // Next turn or end round
+                state.turnIndex += 1;
+
+                if (state.turnIndex >= state.guessers.length) {
+                    setScreen("answer");
+
+                    $("categoryText3").innerHTML =
+                        `Category: ${state.prompt.category}`;
+                    $("spectrumBGAnswer").style.transform =
+                        `rotate(${state.answerDeg}deg)`;
+                    $("psychicHint2").innerHTML = `Hint: ${state.hint}`;
+
+                    $("conceptLeft3").textContent = state.prompt.left;
+                    $("conceptRight3").textContent = state.prompt.right;
+
+                    return;
+                }
+
+                // Reset arrow for next guesser (optional)
+                setGuessDeg(0);
+                updateTurnLabel();
+            }
+
+            /* ============================== Arrow drag ============================== */
+            let dragging = false;
+            let activePointerId = null;
+
+            function getArrowCenter() {
+                const rect = dom.arrowRoot.getBoundingClientRect();
+                return {
+                    cx: rect.left + rect.width / 2,
+                    cy: rect.top + rect.height / 2,
+                };
+            }
+
+            function pointerToDeg(clientX, clientY) {
+                const { cx, cy } = getArrowCenter();
+                const dx = clientX - cx;
+                const dy = clientY - cy;
+
+                const rad = Math.atan2(dy, dx);
+                let deg = Math.floor((rad * (180 / Math.PI)) / 2) * 2; // [-180, 180]
+
+                // Convert so "up" is 0, left negative, right positive
+                deg = deg + 90;
+                if (deg > 180) deg -= 360;
+
+                return clamp(deg, MIN_DEG, MAX_DEG);
+            }
+
+            function setGuessDeg(deg) {
+                state.guessDeg = deg;
+                if (dom.arrowRoot)
+                    dom.arrowRoot.style.transform = `rotate(${deg}deg)`;
+            }
+
+            function onPointerDown(e) {
+                if (e.pointerType === "mouse" && e.button !== 0) return;
+                dragging = true;
+                activePointerId = e.pointerId;
+
+                dom.sensor.setPointerCapture(activePointerId);
+                setGuessDeg(pointerToDeg(e.clientX, e.clientY));
+            }
+
+            function onPointerMove(e) {
+                if (!dragging) return;
+                if (e.pointerId !== activePointerId) return;
+                setGuessDeg(pointerToDeg(e.clientX, e.clientY));
+            }
+
+            function stopDrag(e) {
+                if (!dragging) return;
+                if (e.pointerId !== activePointerId) return;
+                dragging = false;
+                activePointerId = null;
+            }
+
+            function renderLeaderboard() {
+                const entries = state.players.map((name) => ({
+                    name,
+                    pts: state.scores[name] ?? 0,
+                }));
+
+                entries.sort(
+                    (a, b) => b.pts - a.pts || a.name.localeCompare(b.name),
+                );
+
+                dom.leaderboardList.innerHTML = "";
+
+                entries.forEach((row, i) => {
+                    const li = document.createElement("li");
+
+                    const left = document.createElement("div");
+                    left.className = "pill";
+
+                    const rank = document.createElement("span");
+                    rank.className = "badge";
+                    rank.textContent = `#${i + 1}`;
+
+                    const name = document.createElement("span");
+                    name.className = "name";
+                    name.textContent = row.name;
+
+                    left.appendChild(rank);
+                    left.appendChild(name);
+
+                    const score = document.createElement("span");
+                    score.className = "badge";
+                    score.textContent = `${row.pts} pts`;
+
+                    li.appendChild(left);
+                    li.appendChild(score);
+
+                    dom.leaderboardList.appendChild(li);
+                });
+            }
+
+            function toLeaderboard() {
+                renderLeaderboard();
+                setScreen("leaderboard");
+            }
+
+            function reroll() {
+                state.prompt = pickPrompt();
+                toPsychicB();
+                dom.hintInput.focus();
+            }
+
+            /* ============================== Event wiring ============================== */
+            function wireEvents() {
+                // Players
+                dom.addPlayerBtn.addEventListener("click", addPlayerFromInput);
+                dom.playerInput.addEventListener("keydown", (e) => {
+                    if (e.key === "Enter") addPlayerFromInput();
+                });
+                dom.clearPlayersBtn.addEventListener("click", clearPlayers);
+                dom.startRoundBtn.addEventListener("click", startRound);
+
+                // Psychic screens
+                dom.backToPlayersBtn.addEventListener("click", () =>
+                    setScreen("players"),
+                );
+                dom.toPsychicBBtn.addEventListener("click", toPsychicB);
+
+                dom.rerollBtn.addEventListener("click", reroll);
+
+                dom.lockHintBtn.addEventListener("click", lockHintAndGoToGame);
+                dom.hintInput.addEventListener("keydown", (e) => {
+                    if (e.key === "Enter") lockHintAndGoToGame();
+                });
+
+                // Game
+                if (dom.subBtn)
+                    dom.subBtn.addEventListener("click", submitGuess);
+
+                // Arrow input
+                if (dom.sensor && dom.arrowRoot) {
+                    dom.sensor.style.touchAction = "none";
+
+                    dom.sensor.addEventListener("pointerdown", onPointerDown);
+                    dom.sensor.addEventListener("pointermove", onPointerMove);
+                    dom.sensor.addEventListener("pointerup", stopDrag);
+                    dom.sensor.addEventListener("pointercancel", stopDrag);
+                    dom.sensor.addEventListener("lostpointercapture", stopDrag);
+
+                    dom.sensor.addEventListener("click", (e) => {
+                        setGuessDeg(pointerToDeg(e.clientX, e.clientY));
+                    });
+                }
+
+                dom.toLbBtn.addEventListener("click", toLeaderboard);
+
+                dom.nextRoundBtn.addEventListener("click", () => {
+                    startRound();
+                });
+            }
+
+            /* ============================== Init ============================== */
+            wireEvents();
+            updatePlayersUI();
+            dom.playerInput.focus();
+        </script>
+    </body>
+</html>

@@ -1,0 +1,1731 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Wavelength (grok made this one)</title>
+        <style>
+            :root {
+                --bg: #0f1115;
+                --panel: rgba(255, 255, 255, 0.06);
+                --panel-2: rgba(255, 255, 255, 0.08);
+                --border: rgba(255, 255, 255, 0.14);
+                --text: rgba(255, 255, 255, 0.92);
+                --muted: rgba(255, 255, 255, 0.62);
+                --shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
+                --radius: 22px;
+            }
+
+            * {
+                box-sizing: border-box;
+            }
+
+            body {
+                margin: 0;
+                min-height: 100vh;
+                display: grid;
+                place-items: center;
+                background:
+                    radial-gradient(
+                        1200px 800px at 20% 15%,
+                        rgba(120, 80, 255, 0.18),
+                        transparent 60%
+                    ),
+                    radial-gradient(
+                        900px 700px at 80% 80%,
+                        rgba(0, 210, 255, 0.14),
+                        transparent 60%
+                    ),
+                    var(--bg);
+                font-family:
+                    ui-sans-serif,
+                    system-ui,
+                    -apple-system,
+                    Segoe UI,
+                    Roboto,
+                    Arial,
+                    Helvetica,
+                    sans-serif;
+                color: var(--text);
+                padding: 5vw;
+            }
+
+            .card {
+                width: 90vw;
+                background: linear-gradient(
+                    180deg,
+                    rgba(255, 255, 255, 0.08),
+                    rgba(255, 255, 255, 0.04)
+                );
+                border: 1px solid var(--border);
+                border-radius: var(--radius);
+                box-shadow: var(--shadow);
+                overflow: hidden;
+            }
+
+            .header {
+                padding: 22px 22px 14px 22px;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            }
+
+            .title {
+                margin: 0;
+                font-size: 22px;
+                letter-spacing: 0.3px;
+            }
+
+            .subtitle {
+                margin: 6px 0 0 0;
+                color: var(--muted);
+                font-size: 14px;
+                line-height: 1.35;
+            }
+
+            .content {
+                padding: 18px 22px 0 22px;
+            }
+
+            .row {
+                display: flex;
+                gap: 10px;
+                align-items: center;
+            }
+
+            .input {
+                flex: 1;
+                padding: 12px 14px;
+                border-radius: 14px;
+                border: 1px solid rgba(255, 255, 255, 0.14);
+                background: rgba(0, 0, 0, 0.25);
+                color: var(--text);
+                outline: none;
+                transition:
+                    border-color 0.2s,
+                    background 0.2s;
+            }
+
+            .input:focus {
+                border-color: rgba(120, 80, 255, 0.55);
+                background: rgba(0, 0, 0, 0.32);
+            }
+
+            .btn {
+                padding: 12px 14px;
+                border-radius: 14px;
+                border: 1px solid rgba(255, 255, 255, 0.14);
+                background: rgba(255, 255, 255, 0.06);
+                color: var(--text);
+                cursor: pointer;
+                transition:
+                    transform 0.15s,
+                    background 0.2s,
+                    border-color 0.2s,
+                    opacity 0.2s;
+                user-select: none;
+                white-space: nowrap;
+            }
+
+            .btn:hover {
+                background: rgba(255, 255, 255, 0.1);
+            }
+            .btn:active {
+                transform: translateY(1px);
+            }
+            .btn:disabled {
+                opacity: 0.45;
+                cursor: not-allowed;
+            }
+
+            .btn.primary {
+                background: linear-gradient(
+                    135deg,
+                    rgba(120, 80, 255, 0.65),
+                    rgba(0, 210, 255, 0.35)
+                );
+                border-color: rgba(255, 255, 255, 0.18);
+            }
+
+            .btn.primary:hover {
+                background: linear-gradient(
+                    135deg,
+                    rgba(120, 80, 255, 0.75),
+                    rgba(0, 210, 255, 0.42)
+                );
+            }
+
+            .hint {
+                margin: 10px 2px 14px 2px;
+                color: var(--muted);
+                font-size: 12.5px;
+            }
+
+            .listWrap {
+                margin-top: 10px;
+                padding: 12px;
+                background: rgba(0, 0, 0, 0.18);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                border-radius: 18px;
+            }
+
+            ul {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+                display: grid;
+                gap: 10px;
+                max-height: min(44vh, 360px);
+                overflow: auto;
+            }
+
+            li {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 12px;
+                padding: 12px 12px;
+                border-radius: 14px;
+                background: rgba(255, 255, 255, 0.06);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            .name {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                font-size: 14.5px;
+            }
+
+            .pill {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+            }
+
+            .badge {
+                font-size: 12px;
+                padding: 4px 8px;
+                border-radius: 999px;
+                background: rgba(255, 255, 255, 0.08);
+                border: 1px solid rgba(255, 255, 255, 0.12);
+                color: var(--muted);
+                text-align: center;
+            }
+
+            .remove {
+                padding: 8px 10px;
+                border-radius: 12px;
+                border: 1px solid rgba(255, 255, 255, 0.12);
+                background: rgba(0, 0, 0, 0.18);
+                color: var(--text);
+            }
+
+            .remove:hover {
+                border-color: rgba(255, 120, 120, 0.45);
+                background: rgba(255, 80, 80, 0.12);
+            }
+
+            .footer {
+                padding: 16px 22px 22px 22px;
+                display: flex;
+                gap: 10px;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .status {
+                color: var(--muted);
+                font-size: 12.5px;
+            }
+
+            /* Spectrum UI */
+            .spectrumBase {
+                width: 320px;
+                height: 170px;
+                border-top-left-radius: 160px;
+                border-top-right-radius: 160px;
+                border-bottom-left-radius: 10px;
+                border-bottom-right-radius: 10px;
+                background-color: rgba(0, 0, 0, 0.4);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                overflow: hidden;
+                position: relative;
+            }
+
+            .spectrumBG {
+                width: 100%;
+                height: 200%;
+                transform: rotate(-18.75deg);
+                background: conic-gradient(
+                    /* modern teal -> amber -> red -> amber -> teal */ #2dd4bf
+                        0deg,
+                    #2dd4bf 8deg,
+                    #fbbf24 8deg,
+                    #fbbf24 16deg,
+                    #ef4444 16deg,
+                    #ef4444 24deg,
+                    #fbbf24 24deg,
+                    #fbbf24 32deg,
+                    #2dd4bf 32deg,
+                    #2dd4bf 40deg,
+                    rgba(0, 0, 0, 0) 40deg
+                );
+            }
+
+            .spectrumArrowBase {
+                position: absolute;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 40px;
+                height: 40px;
+                border-radius: 999px;
+                left: 50%;
+                bottom: -20px;
+                transform: translateX(-50%);
+                background-color: rgba(0, 0, 0, 1);
+                border: 1px solid rgba(255, 255, 255, 0.12);
+                z-index: 2;
+            }
+
+            #arrowRoot {
+                transform-origin: center center;
+                transform: rotate(0deg);
+                width: 20px;
+                height: 20px;
+                border-radius: 10px;
+                background-color: red;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            #needle {
+                width: 4px;
+                height: 320px;
+                border-radius: 999px;
+                background-color: red;
+            }
+
+            /* Screen switching */
+            .screen {
+                display: none;
+            }
+            .screen.active {
+                display: block;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="card">
+            <!-- Screen: Players -->
+            <section id="screenPlayers" class="screen active">
+                <div class="header">
+                    <h1 class="title">Players</h1>
+                    <p class="subtitle">
+                        Add 2 or more players, then start the round.
+                    </p>
+                </div>
+
+                <div class="content">
+                    <div class="row">
+                        <input
+                            id="playerInput"
+                            class="input"
+                            type="text"
+                            placeholder="Enter player name…"
+                            maxlength="24"
+                        />
+                        <button id="addPlayerBtn" class="btn">Add</button>
+                    </div>
+                    <div id="playersHint" class="hint">
+                        Tip: press Enter to add.
+                    </div>
+
+                    <div class="listWrap">
+                        <ul id="playersList" aria-label="Player list"></ul>
+                    </div>
+                </div>
+
+                <div class="footer">
+                    <div class="status">
+                        <span id="countLabel">0</span> players
+                        <span class="badge" id="minLabel">Need 2</span>
+                    </div>
+
+                    <div class="row">
+                        <button id="clearPlayersBtn" class="btn">Clear</button>
+                        <button id="startRoundBtn" class="btn primary" disabled>
+                            Start
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Screen: Psychic announce -->
+            <section id="screenPsychicA" class="screen">
+                <div class="header">
+                    <h1 class="title" id="roundTitle">Round 1</h1>
+                </div>
+
+                <div class="content" style="padding-bottom: 22px">
+                    <div class="listWrap">
+                        <div
+                            style="
+                                color: var(--muted);
+                                font-size: 14px;
+                                line-height: 1.5;
+                            "
+                            id="psychicText"
+                        >
+                            [player] is the psychic. Pass the device to them.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="footer">
+                    <button id="backToPlayersBtn" class="btn">Back</button>
+                    <button id="toPsychicBBtn" class="btn primary">
+                        Continue
+                    </button>
+                </div>
+            </section>
+
+            <!-- Screen: Psychic hint + spectrum -->
+            <section id="screenPsychicB" class="screen">
+                <div class="header">
+                    <h1 class="title" id="categoryText">
+                        Category: [category]
+                    </h1>
+                    <p class="subtitle">
+                        Write a hint for the spectrum shown below.
+                    </p>
+                </div>
+
+                <div class="content">
+                    <div class="row">
+                        <input
+                            id="hintInput"
+                            class="input"
+                            type="text"
+                            placeholder="Enter hint..."
+                            maxlength="50"
+                        />
+                    </div>
+
+                    <div
+                        class="listWrap"
+                        style="
+                            display: flex;
+                            flex-direction: column;
+                            align-items: center;
+                            gap: 10px;
+                        "
+                    >
+                        <div class="spectrumBase">
+                            <div
+                                class="spectrumBG"
+                                id="spectrumBGquestion"
+                            ></div>
+                            <div class="spectrumArrowBase"></div>
+                        </div>
+
+                        <div
+                            style="
+                                display: flex;
+                                justify-content: space-between;
+                                gap: 100px;
+                                margin-top: 0px;
+                            "
+                        >
+                            <div class="badge" id="conceptLeft">Left</div>
+                            <div class="badge" id="conceptRight">Right</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="footer">
+                    <button id="rerollBtn" class="btn">Reroll</button>
+                    <button id="lockHintBtn" class="btn primary">Submit</button>
+                </div>
+            </section>
+
+            <section id="screenGame" class="screen">
+                <div class="header">
+                    <h1 class="title" id="categoryText2">
+                        Category: [category]
+                    </h1>
+                    <p class="subtitle" id="playerTurn">
+                        It is [player]'s turn.
+                    </p>
+                </div>
+
+                <div class="content">
+                    <div class="listWrap">
+                        <div
+                            style="
+                                color: var(--muted);
+                                font-size: 14px;
+                                line-height: 1.5;
+                            "
+                            id="psychicHint"
+                        >
+                            Hint : [hint]
+                        </div>
+                    </div>
+
+                    <div
+                        class="listWrap"
+                        style="
+                            display: flex;
+                            flex-direction: column;
+                            align-items: center;
+                            gap: 10px;
+                        "
+                    >
+                        <div class="spectrumBase" id="spectrumTouchSensor">
+                            <div class="spectrumArrowBase">
+                                <div id="arrowRoot">
+                                    <div id="needle"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div
+                            style="
+                                display: flex;
+                                justify-content: space-between;
+                                gap: 100px;
+                                margin-top: 0px;
+                            "
+                        >
+                            <div class="badge" id="conceptLeftAgain">Left</div>
+                            <div class="badge" id="conceptRightAgain">
+                                Right
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="footer" style="justify-content: right">
+                    <button id="subBtn" class="btn primary">Submit</button>
+                </div>
+            </section>
+
+            <!-- Screen: Psychic hint + spectrum -->
+            <section id="screenAnswer" class="screen">
+                <div class="header">
+                    <h1 class="title">Answer</h1>
+                    <p id="categoryText3" class="subtitle">
+                        Category: [category]
+                    </p>
+                </div>
+
+                <div class="content">
+                    <div class="listWrap">
+                        <div
+                            style="
+                                color: var(--muted);
+                                font-size: 14px;
+                                line-height: 1.5;
+                            "
+                            id="psychicHint2"
+                        >
+                            Hint : [hint]
+                        </div>
+                    </div>
+
+                    <div
+                        class="listWrap"
+                        style="
+                            display: flex;
+                            flex-direction: column;
+                            align-items: center;
+                            gap: 10px;
+                        "
+                    >
+                        <div class="spectrumBase">
+                            <div class="spectrumBG" id="spectrumBGAnswer"></div>
+                            <div class="spectrumArrowBase"></div>
+                        </div>
+
+                        <div
+                            style="
+                                display: flex;
+                                justify-content: space-between;
+                                gap: 100px;
+                                margin-top: 0px;
+                            "
+                        >
+                            <div class="badge" id="conceptLeft3">Left</div>
+                            <div class="badge" id="conceptRight3">Right</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="footer" style="justify-content: right">
+                    <button id="toLbBtn" class="btn primary">Next</button>
+                </div>
+            </section>
+
+            <section id="screenLeaderboard" class="screen">
+                <div class="header">
+                    <h1 class="title">Leaderboard</h1>
+                    <p class="subtitle">Total points</p>
+                </div>
+
+                <div class="content">
+                    <div class="listWrap">
+                        <ul id="leaderboardList" aria-label="Leaderboard"></ul>
+                    </div>
+                </div>
+
+                <div class="footer" style="justify-content: right">
+                    <button id="nextRoundBtn" class="btn primary">
+                        Next round
+                    </button>
+                </div>
+            </section>
+        </div>
+
+        <script>
+            "use strict";
+
+            /* ============================== Data: Prompts ============================== */
+            const PROMPTS = [
+                {
+                    category: "Current horniness",
+                    left: "Stone cold",
+                    right: "Leaking already",
+                },
+                {
+                    category: "Degenerate level",
+                    left: "Vanilla AF",
+                    right: "Knotted IRL",
+                },
+                {
+                    category: "PC filter",
+                    left: "Corporate safe",
+                    right: "Perma-banned energy",
+                },
+                {
+                    category: "Fuck roughness",
+                    left: "Cuddly",
+                    right: "Bruise factory",
+                },
+                {
+                    category: "Dick size preference",
+                    left: "Boyfriend material",
+                    right: "Forearm required",
+                },
+                {
+                    category: "Grandma racism",
+                    left: "Mild boomer",
+                    right: "Unreconstructed 1950s",
+                },
+                {
+                    category: "Simp meter",
+                    left: "Normal",
+                    right: "$2k/month goddess",
+                },
+                {
+                    category: "Unsolicited dick pic rate",
+                    left: "Never",
+                    right: "Opening move",
+                },
+                {
+                    category: "Porn search depravity",
+                    left: "Amateur",
+                    right: "2 girls 1 cup sequel",
+                },
+                {
+                    category: "Cheating urge",
+                    left: "Faithful",
+                    right: "Burner Snapchat",
+                },
+                {
+                    category: "Cuck tendencies",
+                    left: "Jealous type",
+                    right: "Cleaning duty",
+                },
+                {
+                    category: "Porn hours/day",
+                    left: "Casual",
+                    right: "Full-time job",
+                },
+                {
+                    category: "Fetish extremity",
+                    left: "Light choking",
+                    right: "Actual crimes",
+                },
+                {
+                    category: "Misandry/misogyny dial",
+                    left: "Chill",
+                    right: "Gender warlord",
+                },
+                {
+                    category: "OnlyFans buyer energy",
+                    left: "Free previews only",
+                    right: "Top 0.1% whale",
+                },
+                {
+                    category: "Post-nut clarity speed",
+                    left: "Instant regret",
+                    right: "Still horny",
+                },
+                {
+                    category: "Glory hole enthusiasm",
+                    left: "Hesitant tourist",
+                    right: "Regular customer",
+                },
+                {
+                    category: "Incest kink level",
+                    left: "Weirded out",
+                    right: "Has bookmarks",
+                },
+                {
+                    category: "Public masturbation risk",
+                    left: "Never",
+                    right: "Bus pro",
+                },
+                {
+                    category: "BDSM intensity",
+                    left: "Hand-holding",
+                    right: "Hogtied blackout",
+                },
+                {
+                    category: "Anal enthusiasm",
+                    left: "Nope never",
+                    right: "Butt plug 24/7",
+                },
+                {
+                    category: "Cum play level",
+                    left: "Tissue wipe",
+                    right: "Swallows & paints",
+                },
+                {
+                    category: "Breath play risk",
+                    left: "Light choke",
+                    right: "Purple & praying",
+                },
+                {
+                    category: "Watersports vibe",
+                    left: "Grossed out",
+                    right: "Shower golden regular",
+                },
+                {
+                    category: "Impact play marks",
+                    left: "Faint pink",
+                    right: "Welted for days",
+                },
+                {
+                    category: "Pet play commitment",
+                    left: "Cute nickname",
+                    right: "Kennel & tail plug",
+                },
+                {
+                    category: "Edging torture",
+                    left: "Once is enough",
+                    right: "Three-hour denial cry",
+                },
+                {
+                    category: "Group sex fantasy",
+                    left: "Threesome maybe",
+                    right: "Gangbang bucket list",
+                },
+                {
+                    category: "Degradation kink",
+                    left: "Sweet praise only",
+                    right: "Worthless fucktoy chants",
+                },
+                {
+                    category: "Weed tolerance",
+                    left: "One hit couch-lock",
+                    right: "Bong-racer champion",
+                },
+                {
+                    category: "Sugar daddy potential",
+                    left: "Broke student",
+                    right: "Pays rent in cash",
+                },
+                {
+                    category: "CNC fantasy level",
+                    left: "Too scared",
+                    right: "Safe-word tattooed",
+                },
+                {
+                    category: "Political extremism",
+                    left: "Centrist memes",
+                    right: "Manifesto printer on",
+                },
+                {
+                    category: "Ass eating enthusiasm",
+                    left: "Hesitant lick",
+                    right: "Full tongue worship",
+                },
+                {
+                    category: "Body count shame",
+                    left: "Proudly single digits",
+                    right: "Lost count at prom",
+                },
+                {
+                    category: "Conspiracy brain",
+                    left: "Moon landing real",
+                    right: "Lizard people HR rep",
+                },
+                {
+                    category: "Feet pic seller energy",
+                    left: "Never tried",
+                    right: "Custom toenail art",
+                },
+                {
+                    category: "Road rage intensity",
+                    left: "Passive honk",
+                    right: "Carry a bat for emphasis",
+                },
+                {
+                    category: "Creampie preference",
+                    left: "Pull out king",
+                    right: "No towel needed",
+                },
+                {
+                    category: "Cancel culture fear",
+                    left: "Posts freely",
+                    right: "Deletes drafts at 3am",
+                },
+                {
+                    category: "Vore kink dial",
+                    left: "Weirded out",
+                    right: "Has size difference bookmarks",
+                },
+                {
+                    category: "Booze tolerance",
+                    left: "Tipsy after one",
+                    right: "Tequila IV drip",
+                },
+                {
+                    category: "Stalker ex vibes",
+                    left: "Blocked & forgotten",
+                    right: "Still checks location",
+                },
+                {
+                    category: "Public sex bravery",
+                    left: "Car backseat max",
+                    right: "Park bench noon",
+                },
+                {
+                    category: "Tax evasion swagger",
+                    left: "Itemizes receipts",
+                    right: "Crypto in mattress",
+                },
+                {
+                    category: "Lactation kink",
+                    left: "Never thought about",
+                    right: "Milking table regular",
+                },
+                {
+                    category: "Doomer mindset",
+                    left: "Hopeful zoomer",
+                    right: "Waiting for collapse porn",
+                },
+                {
+                    category: "Virginity loss age",
+                    left: "Sweet 19 romance",
+                    right: "Middle school legend",
+                },
+                {
+                    category: "Necro joke comfort",
+                    left: "Immediate ick",
+                    right: "Dark humour dealer",
+                },
+                {
+                    category: "Woke level",
+                    left: "Pronouns in bio",
+                    right: "Triggered by air",
+                },
+                {
+                    category: "Racial stereotype comfort",
+                    left: "Uncomfortable silence",
+                    right: "Tells them at parties",
+                },
+                {
+                    category: "Feminist rage meter",
+                    left: "Mild eyeroll",
+                    right: "Smash the patriarchy brick",
+                },
+                {
+                    category: "Immigration stance",
+                    left: "Build the wall… maybe",
+                    right: "Deport tourists too",
+                },
+                {
+                    category: "Gender war participation",
+                    left: "Both sides suck",
+                    right: "Pick-me general",
+                },
+                {
+                    category: "Holocaust joke tolerance",
+                    left: "Immediate block",
+                    right: "Has a folder",
+                },
+                {
+                    category: "Fat acceptance dial",
+                    left: "Health at every size",
+                    right: "HAES is cope",
+                },
+                {
+                    category: "Climate change denial",
+                    left: "Recycles sometimes",
+                    right: "Coal-rolling patriot",
+                },
+                {
+                    category: "Abortion hot take",
+                    left: "Safe legal rare",
+                    right: "After birth is fine",
+                },
+                {
+                    category: "Muslim ban energy",
+                    left: "That's racist",
+                    right: "Renew it forever",
+                },
+                {
+                    category: "Trans athlete fairness",
+                    left: "Let them compete",
+                    right: "Bone-density cheat code",
+                },
+                {
+                    category: "White guilt amount",
+                    left: "Apologizes daily",
+                    right: "Colonizer pride month",
+                },
+                {
+                    category: "BLM vs All Lives Matter",
+                    left: "Both kinda right",
+                    right: "Blue lives > all",
+                },
+                {
+                    category: "Cancel culture victim complex",
+                    left: "Never been ratioed",
+                    right: "Permanent victim arc",
+                },
+                {
+                    category: "Replacement theory belief",
+                    left: "Conspiracy nonsense",
+                    right: "It's happening live",
+                },
+                {
+                    category: "Epstein client list existence",
+                    left: "Totally fake",
+                    right: "Still buried deep",
+                },
+                {
+                    category: "Diddy freak-off energy",
+                    left: "White party vibes",
+                    right: "Baby oil apocalypse",
+                },
+                {
+                    category: "Blackmail footage stash",
+                    left: "Nothing incriminating",
+                    right: "Celeb kompromat vault",
+                },
+                {
+                    category: "Elite party attendee",
+                    left: "Never RSVP'd",
+                    right: "Regular island hopper",
+                },
+                {
+                    category: "How protected they were",
+                    left: "Sued into oblivion",
+                    right: "Still untouchable",
+                },
+                {
+                    category: "Hidden camera paranoia",
+                    left: "Just security",
+                    right: "Every angle recorded",
+                },
+                {
+                    category: "Black Epstein comparison",
+                    left: "Racist stretch",
+                    right: "Diddy upgraded",
+                },
+                {
+                    category: "Who got away with it",
+                    left: "Everyone named",
+                    right: "The real list holders",
+                },
+                {
+                    category: "Freak off vs island scale",
+                    left: "Mansion chaos",
+                    right: "Private jet pedo paradise",
+                },
+                {
+                    category: "Conspiracy theorist dial",
+                    left: "Coincidence only",
+                    right: "They're all connected",
+                },
+                {
+                    category: "Post-release clarity",
+                    left: "Case closed forever",
+                    right: "Files still redacted",
+                },
+                {
+                    category: "A-list panic level",
+                    left: "Chill no mentions",
+                    right: "Burner phone sweating",
+                },
+                {
+                    category: "Foot fetish intensity",
+                    left: "Cute socks only",
+                    right: "Sniffing marathon",
+                },
+                {
+                    category: "Crypto bro energy",
+                    left: "Bought one Bitcoin",
+                    right: "Lost house on memecoins",
+                },
+                {
+                    category: "Quiet quitting level",
+                    left: "Does the bare minimum",
+                    right: "Zoom background is bed",
+                },
+                {
+                    category: "MILF hunter success",
+                    left: "Tried once",
+                    right: "Neighborhood legend",
+                },
+                {
+                    category: "Vaccine skeptic dial",
+                    left: "Got the jab quietly",
+                    right: "Microchip conspiracy king",
+                },
+                {
+                    category: "Piss poor hygiene",
+                    left: "Showers daily",
+                    right: "Smells like regret",
+                },
+                {
+                    category: "OnlyFans creator delusion",
+                    left: "Hobby side hustle",
+                    right: "Million-dollar dream",
+                },
+                {
+                    category: "Road head bravery",
+                    left: "Passenger lane max",
+                    right: "Highway blowie pro",
+                },
+                {
+                    category: "Election denier commitment",
+                    left: "2020 was weird",
+                    right: "Still has Stop the Steal flag",
+                },
+                {
+                    category: "Cumshot distance",
+                    left: "Dribble city",
+                    right: "Across the room champion",
+                },
+                {
+                    category: "Reddit addict hours",
+                    left: "Checks occasionally",
+                    right: "Moderator of 47 subs",
+                },
+                {
+                    category: "Sugar baby negotiation",
+                    left: "Dinner dates",
+                    right: "Rent + Birkin",
+                },
+                {
+                    category: "Fart tolerance",
+                    left: "Immediate disgust",
+                    right: "Dutch oven master",
+                },
+                {
+                    category: "TikTok thirst trap energy",
+                    left: "Casual selfie",
+                    right: "Renegade in lingerie",
+                },
+                {
+                    category: "Gun owner flex",
+                    left: "One safe queen",
+                    right: "ARs in every room",
+                },
+                {
+                    category: "Age gap preference",
+                    left: "Same year vibes",
+                    right: "Dating their dad's friends",
+                },
+                {
+                    category: "Bar fight readiness",
+                    left: "Talks it out",
+                    right: "Glass in hand specialist",
+                },
+                {
+                    category: "Porn category addiction",
+                    left: "Straight vanilla",
+                    right: "Has subgenres of subgenres",
+                },
+                {
+                    category: "Ghosting speed",
+                    left: "Explains first",
+                    right: "Seen-zoned in 3 seconds",
+                },
+                {
+                    category: "Flat earth believer",
+                    left: "Laughs it off",
+                    right: "Globe model burner",
+                },
+                {
+                    category: "Creampie cleanup duty",
+                    left: "Towel nearby",
+                    right: "Licks it spotless",
+                },
+                {
+                    category: "Influencer grift level",
+                    left: "Authentic content",
+                    right: "Promotes dropshipping trash",
+                },
+                {
+                    category: "BDSM safe word usage",
+                    left: "Never needed",
+                    right: "Yells it like a siren",
+                },
+                {
+                    category: "Threesome jealousy",
+                    left: "Watches happily",
+                    right: "Cries in the corner",
+                },
+                {
+                    category: "Meth head energy",
+                    left: "Tried once",
+                    right: "Teeth optional",
+                },
+                {
+                    category: "Twitter ratio victim",
+                    left: "Never been owned",
+                    right: "Daily L collector",
+                },
+                {
+                    category: "Prostate play enthusiasm",
+                    left: "Finger? Maybe",
+                    right: "Milking table appointment",
+                },
+                {
+                    category: "Karen complaint power",
+                    left: "Asks politely",
+                    right: "Manager summoning demon",
+                },
+                {
+                    category: "Booty call response time",
+                    left: "Next day",
+                    right: "Door open already",
+                },
+                {
+                    category: "QAnon depth",
+                    left: "Heard of it",
+                    right: "Decodes drops at 4am",
+                },
+                {
+                    category: "Squirting belief",
+                    left: "Pee myth",
+                    right: "Floods the mattress",
+                },
+                {
+                    category: "NFT bag holder",
+                    left: "Sold early",
+                    right: "Still waiting for moon",
+                },
+                {
+                    category: "Cuck chair comfort",
+                    left: "Awkward corner",
+                    right: "Front row popcorn",
+                },
+                {
+                    category: "Period sex comfort",
+                    left: "Towel required",
+                    right: "Shark week enthusiast",
+                },
+                {
+                    category: "Deep web curiosity",
+                    left: "Reddit stories",
+                    right: "Tor browser pinned",
+                },
+                {
+                    category: "Gym bro roid rage",
+                    left: "Natural gains",
+                    right: "Veins popping anger",
+                },
+                {
+                    category: "Ex revenge porn",
+                    left: "Would never",
+                    right: "Has the folder ready",
+                },
+                {
+                    category: "Polyamory honesty",
+                    left: "One partner only",
+                    right: "Schedule spreadsheet",
+                },
+                {
+                    category: "Sounding kink level",
+                    left: "Metal rod? No",
+                    right: "Dilator collection",
+                },
+                {
+                    category: "Boomer meme hate",
+                    left: "Laughs sometimes",
+                    right: "OK boomer tattoo",
+                },
+                {
+                    category: "Car sex frequency",
+                    left: "Once in college",
+                    right: "Backseat is home",
+                },
+                {
+                    category: "Cancel apology sincerity",
+                    left: "Genuine regret",
+                    right: "PR team wrote it",
+                },
+                {
+                    category: "Ballbusting tolerance",
+                    left: "Light tap hurts",
+                    right: "Knee drop enjoyer",
+                },
+                {
+                    category: "Discord mod power trip",
+                    left: "Fair rules",
+                    right: "Permaban for typos",
+                },
+                {
+                    category: "Glory hole location scout",
+                    left: "Urban legend",
+                    right: "Has Yelp reviews",
+                },
+                {
+                    category: "Tradwife fantasy",
+                    left: "Cute aesthetic",
+                    right: "Submissive 1950s LARP",
+                },
+                {
+                    category: "MDMA comedown crying",
+                    left: "Mild blues",
+                    right: "Existential meltdown",
+                },
+                {
+                    category: "Step-sibling porn watcher",
+                    left: "Avoids it",
+                    right: "Top search term",
+                },
+                {
+                    category: "Rich kid trust fund",
+                    left: "Works for fun",
+                    right: "Nepo baby supreme",
+                },
+            ];
+
+            /* ============================== Constants ============================== */
+            const MIN_PLAYERS = 2;
+
+            // Arrow drag clamp
+            const MIN_DEG = -80;
+            const MAX_DEG = 80;
+
+            // Scoring thresholds (degrees)
+            const SCORE_BANDS = [
+                { maxDiff: 4, points: 5 },
+                { maxDiff: 12, points: 2 },
+                { maxDiff: 20, points: 1 },
+            ];
+
+            /* ============================== State ============================== */
+            const state = {
+                round: 0,
+
+                players: [],
+                scores: Object.create(null), // { name: points }
+
+                psychic: null,
+                prompt: null, // {category,left,right}
+                hint: "",
+
+                // Hidden true rotation for the dial (psychic screen)
+                answerDeg: 0,
+
+                // Guessing flow (game screen)
+                guessers: [],
+                turnIndex: 0,
+
+                // Current arrow rotation chosen by the active guesser
+                guessDeg: 0,
+            };
+
+            /* ============================== DOM helpers ============================== */
+            const $ = (id) => document.getElementById(id);
+
+            const dom = {
+                // Screens
+                screens: {
+                    players: $("screenPlayers"),
+                    psychicA: $("screenPsychicA"),
+                    psychicB: $("screenPsychicB"),
+                    game: $("screenGame"),
+                    answer: $("screenAnswer"),
+                    leaderboard: $("screenLeaderboard"),
+                },
+
+                // Players screen
+                playerInput: $("playerInput"),
+                addPlayerBtn: $("addPlayerBtn"),
+                clearPlayersBtn: $("clearPlayersBtn"),
+                startRoundBtn: $("startRoundBtn"),
+                playersList: $("playersList"),
+                countLabel: $("countLabel"),
+                minLabel: $("minLabel"),
+                playersHint: $("playersHint"),
+
+                // PsychicA screen
+                roundTitle: $("roundTitle"),
+                psychicText: $("psychicText"),
+                backToPlayersBtn: $("backToPlayersBtn"),
+                toPsychicBBtn: $("toPsychicBBtn"),
+
+                // PsychicB screen
+                categoryText: $("categoryText"),
+                conceptLeft: $("conceptLeft"),
+                conceptRight: $("conceptRight"),
+                hintInput: $("hintInput"),
+                lockHintBtn: $("lockHintBtn"),
+                spectrumBGquestion: $("spectrumBGquestion"),
+
+                // Game screen (must exist in your HTML)
+                categoryText2: $("categoryText2"),
+                psychicHint: $("psychicHint"),
+                conceptLeftAgain: $("conceptLeftAgain"),
+                conceptRightAgain: $("conceptRightAgain"),
+                playerTurn: $("playerTurn"),
+                subBtn: $("subBtn"),
+
+                // Arrow drag
+                sensor: $("spectrumTouchSensor"),
+                arrowRoot: $("arrowRoot"),
+
+                // Answer screen
+                toLbBtn: $("toLbBtn"),
+
+                leaderboard: $("screenLeaderboard"),
+                leaderboardList: $("leaderboardList"),
+                nextRoundBtn: $("nextRoundBtn"),
+
+                rerollBtn: $("rerollBtn"),
+            };
+
+            /* ============================== Screen switching ============================== */
+            function setScreen(name) {
+                for (const key of Object.keys(dom.screens)) {
+                    const el = dom.screens[key];
+                    if (!el) continue;
+                    el.classList.toggle("active", key === name);
+                }
+            }
+
+            /* ============================== Utilities ============================== */
+            function normalizeText(s) {
+                return String(s || "")
+                    .trim()
+                    .replace(/\s+/g, " ");
+            }
+
+            function randInt(maxExclusive) {
+                return Math.floor(Math.random() * maxExclusive);
+            }
+
+            function pickRandom(arr) {
+                return arr[randInt(arr.length)];
+            }
+
+            function pickPrompt() {
+                if (PROMPTS.length === 0) return null;
+                if (!state.prompt || PROMPTS.length === 1)
+                    return pickRandom(PROMPTS);
+
+                let p = pickRandom(PROMPTS);
+                let tries = 0;
+                while (p === state.prompt && tries < 12) {
+                    p = pickRandom(PROMPTS);
+                    tries++;
+                }
+                return p;
+            }
+
+            function clamp(v, lo, hi) {
+                return Math.max(lo, Math.min(hi, v));
+            }
+
+            function ensureScore(name) {
+                if (state.scores[name] == null) state.scores[name] = 0;
+            }
+
+            function pointsFromDiff(diffDeg) {
+                for (const band of SCORE_BANDS) {
+                    if (diffDeg < band.maxDiff) return band.points; // strict < as requested
+                }
+                return 0;
+            }
+
+            /* ============================== Players UI ============================== */
+            function updatePlayersUI() {
+                dom.countLabel.textContent = String(state.players.length);
+
+                const remaining = Math.max(
+                    0,
+                    MIN_PLAYERS - state.players.length,
+                );
+                dom.minLabel.textContent =
+                    remaining === 0 ? "Ready" : `Need ${remaining}`;
+                dom.startRoundBtn.disabled = state.players.length < MIN_PLAYERS;
+
+                dom.playersHint.textContent =
+                    state.players.length === 0
+                        ? "Tip: press Enter to add."
+                        : "Click ✕ to remove a player.";
+            }
+
+            function renderPlayersList() {
+                dom.playersList.innerHTML = "";
+
+                state.players.forEach((name, idx) => {
+                    const li = document.createElement("li");
+
+                    const left = document.createElement("div");
+                    left.className = "pill";
+
+                    const label = document.createElement("span");
+                    label.className = "badge";
+                    label.textContent = `#${idx + 1}`;
+
+                    const span = document.createElement("span");
+                    span.className = "name";
+                    span.textContent = name;
+
+                    left.appendChild(label);
+                    left.appendChild(span);
+
+                    const removeBtn = document.createElement("button");
+                    removeBtn.className = "btn remove";
+                    removeBtn.type = "button";
+                    removeBtn.textContent = "✕";
+                    removeBtn.title = "Remove player";
+                    removeBtn.addEventListener("click", () => {
+                        state.players.splice(idx, 1);
+                        renderPlayersList();
+                        updatePlayersUI();
+                    });
+
+                    li.appendChild(left);
+                    li.appendChild(removeBtn);
+                    dom.playersList.appendChild(li);
+                });
+            }
+
+            function addPlayerFromInput() {
+                const value = normalizeText(dom.playerInput.value);
+                if (!value) return;
+
+                if (value.length < 2) {
+                    dom.playerInput.value = "";
+                    dom.playerInput.focus();
+                    return;
+                }
+
+                const exists = state.players.some(
+                    (p) => p.toLowerCase() === value.toLowerCase(),
+                );
+                if (exists) {
+                    dom.playerInput.select();
+                    return;
+                }
+
+                state.players.push(value);
+                dom.playerInput.value = "";
+                renderPlayersList();
+                updatePlayersUI();
+                dom.playerInput.focus();
+            }
+
+            function clearPlayers() {
+                state.players.length = 0;
+                renderPlayersList();
+                updatePlayersUI();
+                dom.playerInput.value = "";
+                dom.playerInput.focus();
+            }
+
+            /* ============================== Round flow ============================== */
+            function startRound() {
+                if (state.players.length < MIN_PLAYERS) return;
+
+                state.round += 1;
+                state.answerDeg =
+                    Math.floor((Math.random() * 160 - 100) / 2) * 2;
+
+                state.psychic = pickRandom(state.players);
+                state.prompt = pickPrompt();
+                state.hint = "";
+
+                // Prepare guessers (everyone except psychic)
+                state.guessers = state.players.filter(
+                    (p) => p !== state.psychic,
+                );
+                state.turnIndex = 0;
+
+                // Reset arrow guess
+                setGuessDeg(0);
+
+                // Psychic A screen
+                dom.roundTitle.textContent = `Round ${state.round}`;
+                dom.psychicText.textContent = `${state.psychic} is the psychic. Pass the device to them.`;
+
+                setScreen("psychicA");
+            }
+
+            function toPsychicB() {
+                if (!state.prompt) return;
+
+                dom.categoryText.textContent = `Category: ${state.prompt.category}`;
+                dom.conceptLeft.textContent = state.prompt.left;
+                dom.conceptRight.textContent = state.prompt.right;
+
+                if (dom.spectrumBGquestion) {
+                    dom.spectrumBGquestion.style.transform = `rotate(${state.answerDeg}deg)`;
+                }
+
+                dom.hintInput.value = "";
+                setScreen("psychicB");
+                dom.hintInput.focus();
+            }
+
+            function lockHintAndGoToGame() {
+                const hint = normalizeText(dom.hintInput.value);
+                if (!hint) {
+                    dom.hintInput.focus();
+                    return;
+                }
+                state.hint = hint;
+
+                // Populate game screen
+                if (dom.categoryText2)
+                    dom.categoryText2.textContent = `Category: ${state.prompt.category}`;
+                if (dom.psychicHint)
+                    dom.psychicHint.textContent = `Hint: ${state.hint}`;
+                if (dom.conceptLeftAgain)
+                    dom.conceptLeftAgain.textContent = state.prompt.left;
+                if (dom.conceptRightAgain)
+                    dom.conceptRightAgain.textContent = state.prompt.right;
+
+                updateTurnLabel();
+                setScreen("game");
+            }
+
+            function updateTurnLabel() {
+                const guesser = state.guessers[state.turnIndex];
+                if (dom.playerTurn)
+                    dom.playerTurn.textContent = guesser
+                        ? `It is ${guesser}'s turn.`
+                        : "";
+            }
+
+            function submitGuess() {
+                const guesser = state.guessers[state.turnIndex];
+                if (!guesser) return;
+
+                const diff = Math.abs(state.guessDeg - 20 - state.answerDeg);
+                const pts = pointsFromDiff(diff);
+
+                ensureScore(guesser);
+                ensureScore(state.psychic);
+
+                state.scores[guesser] += pts;
+                state.scores[state.psychic] += pts;
+
+                // Next turn or end round
+                state.turnIndex += 1;
+
+                if (state.turnIndex >= state.guessers.length) {
+                    setScreen("answer");
+
+                    $("categoryText3").innerHTML =
+                        `Category: ${state.prompt.category}`;
+                    $("spectrumBGAnswer").style.transform =
+                        `rotate(${state.answerDeg}deg)`;
+                    $("psychicHint2").innerHTML = `Hint: ${state.hint}`;
+
+                    $("conceptLeft3").textContent = state.prompt.left;
+                    $("conceptRight3").textContent = state.prompt.right;
+
+                    return;
+                }
+
+                // Reset arrow for next guesser (optional)
+                setGuessDeg(0);
+                updateTurnLabel();
+            }
+
+            /* ============================== Arrow drag ============================== */
+            let dragging = false;
+            let activePointerId = null;
+
+            function getArrowCenter() {
+                const rect = dom.arrowRoot.getBoundingClientRect();
+                return {
+                    cx: rect.left + rect.width / 2,
+                    cy: rect.top + rect.height / 2,
+                };
+            }
+
+            function pointerToDeg(clientX, clientY) {
+                const { cx, cy } = getArrowCenter();
+                const dx = clientX - cx;
+                const dy = clientY - cy;
+
+                const rad = Math.atan2(dy, dx);
+                let deg = Math.floor((rad * (180 / Math.PI)) / 2) * 2; // [-180, 180]
+
+                // Convert so "up" is 0, left negative, right positive
+                deg = deg + 90;
+                if (deg > 180) deg -= 360;
+
+                return clamp(deg, MIN_DEG, MAX_DEG);
+            }
+
+            function setGuessDeg(deg) {
+                state.guessDeg = deg;
+                if (dom.arrowRoot)
+                    dom.arrowRoot.style.transform = `rotate(${deg}deg)`;
+            }
+
+            function onPointerDown(e) {
+                if (e.pointerType === "mouse" && e.button !== 0) return;
+                dragging = true;
+                activePointerId = e.pointerId;
+
+                dom.sensor.setPointerCapture(activePointerId);
+                setGuessDeg(pointerToDeg(e.clientX, e.clientY));
+            }
+
+            function onPointerMove(e) {
+                if (!dragging) return;
+                if (e.pointerId !== activePointerId) return;
+                setGuessDeg(pointerToDeg(e.clientX, e.clientY));
+            }
+
+            function stopDrag(e) {
+                if (!dragging) return;
+                if (e.pointerId !== activePointerId) return;
+                dragging = false;
+                activePointerId = null;
+            }
+
+            function renderLeaderboard() {
+                const entries = state.players.map((name) => ({
+                    name,
+                    pts: state.scores[name] ?? 0,
+                }));
+
+                entries.sort(
+                    (a, b) => b.pts - a.pts || a.name.localeCompare(b.name),
+                );
+
+                dom.leaderboardList.innerHTML = "";
+
+                entries.forEach((row, i) => {
+                    const li = document.createElement("li");
+
+                    const left = document.createElement("div");
+                    left.className = "pill";
+
+                    const rank = document.createElement("span");
+                    rank.className = "badge";
+                    rank.textContent = `#${i + 1}`;
+
+                    const name = document.createElement("span");
+                    name.className = "name";
+                    name.textContent = row.name;
+
+                    left.appendChild(rank);
+                    left.appendChild(name);
+
+                    const score = document.createElement("span");
+                    score.className = "badge";
+                    score.textContent = `${row.pts} pts`;
+
+                    li.appendChild(left);
+                    li.appendChild(score);
+
+                    dom.leaderboardList.appendChild(li);
+                });
+            }
+
+            function toLeaderboard() {
+                renderLeaderboard();
+                setScreen("leaderboard");
+            }
+
+            function reroll() {
+                state.prompt = pickPrompt();
+                toPsychicB();
+                dom.hintInput.focus();
+            }
+
+            /* ============================== Event wiring ============================== */
+            function wireEvents() {
+                // Players
+                dom.addPlayerBtn.addEventListener("click", addPlayerFromInput);
+                dom.playerInput.addEventListener("keydown", (e) => {
+                    if (e.key === "Enter") addPlayerFromInput();
+                });
+                dom.clearPlayersBtn.addEventListener("click", clearPlayers);
+                dom.startRoundBtn.addEventListener("click", startRound);
+
+                // Psychic screens
+                dom.backToPlayersBtn.addEventListener("click", () =>
+                    setScreen("players"),
+                );
+                dom.toPsychicBBtn.addEventListener("click", toPsychicB);
+
+                dom.rerollBtn.addEventListener("click", reroll);
+
+                dom.lockHintBtn.addEventListener("click", lockHintAndGoToGame);
+                dom.hintInput.addEventListener("keydown", (e) => {
+                    if (e.key === "Enter") lockHintAndGoToGame();
+                });
+
+                // Game
+                if (dom.subBtn)
+                    dom.subBtn.addEventListener("click", submitGuess);
+
+                // Arrow input
+                if (dom.sensor && dom.arrowRoot) {
+                    dom.sensor.style.touchAction = "none";
+
+                    dom.sensor.addEventListener("pointerdown", onPointerDown);
+                    dom.sensor.addEventListener("pointermove", onPointerMove);
+                    dom.sensor.addEventListener("pointerup", stopDrag);
+                    dom.sensor.addEventListener("pointercancel", stopDrag);
+                    dom.sensor.addEventListener("lostpointercapture", stopDrag);
+
+                    dom.sensor.addEventListener("click", (e) => {
+                        setGuessDeg(pointerToDeg(e.clientX, e.clientY));
+                    });
+                }
+
+                dom.toLbBtn.addEventListener("click", toLeaderboard);
+
+                dom.nextRoundBtn.addEventListener("click", () => {
+                    startRound();
+                });
+            }
+
+            /* ============================== Init ============================== */
+            wireEvents();
+            updatePlayersUI();
+            dom.playerInput.focus();
+        </script>
+    </body>
+</html>
